@@ -1,7 +1,7 @@
 export const myWorks = [
   {
     id: 0,
-    img: "../imgs/vue_chat_proyect.gif",
+    img: "./imgs/vue_chat_proyect.gif",
     title: "Vue Chat Proyect",
     description: "This SPA fetchs made with Vue, Pinia and Booststrap 5 uses Firebase to get functionalities of Authentication, Data Storage and Chat.",
     github: "https://github.com/derpmagician/fbvue3-exp",
@@ -9,7 +9,7 @@ export const myWorks = [
   },
   {
     id: 1,
-    img: "../imgs/user_administrator.gif",
+    img: "./imgs/user_administrator.gif",
     title: "User Administrator",
     description: "This SPA fetchs an api and uses React, Routes and Redux to manipulate data and change users roles and location, it also has Auth0 authentication",
     github: "https://github.com/derpmagician/user-administration-react-redux",
@@ -17,7 +17,7 @@ export const myWorks = [
   },
   {
     id: 2,
-    img: "../imgs/shorten.png",
+    img: "./imgs/shorten.png",
     title: "Shorten",
     description: "Link shortener made with Node, React y MongoDB, grabs the given url verifies if exist on the db and if doesnt then it gives you a short id, which can be used to access to the given url",
     github: "https://github.com/derpmagician/shorten",
@@ -25,7 +25,7 @@ export const myWorks = [
   },
   {
     id: 3,
-    img: "../imgs/image_filters.gif",
+    img: "./imgs/image_filters.gif",
     title: "Image Filters",
     description: "Image Editor in React with a save feature manipulating the CSS with React",
     github: "https://github.com/derpmagician/react_img_filters",
@@ -33,7 +33,7 @@ export const myWorks = [
   },
   {
     id: 4,
-    img: "../imgs/tower_defense_js.gif",
+    img: "./imgs/tower_defense_js.gif",
     title: "Tower Defense Js",
     description: "Javascript vanilla game that uses the Canvas element of HTML and js classes to create the objects",
     github: "https://github.com/derpmagician/towerdefencejs",
@@ -49,7 +49,7 @@ export const myWorks = [
   // },
   {
     id: 6,
-    img: "../imgs/screen_saver_emulator.gif",
+    img: "./imgs/screen_saver_emulator.gif",
     title: "Screen Saver Emulator",
     description: "Manipulates the CSS properties to draw the '3D' objects and only uses vanilla js to activate the timer for the screen to appear.",
     github: "https://github.com/derpmagician/ScreenSaver-Sim",
