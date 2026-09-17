@@ -197,7 +197,16 @@ body {
   transform: translateY(-50%);
   width: min(24vw, 320px, calc((100% - var(--cube-size) * 1.1) / 2 - 24px));
   aspect-ratio: 4 / 5;
-  pointer-events: none;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.character-stage:focus-visible {
+  outline: 2px solid var(--color-lime);
+  outline-offset: 4px;
+  border-radius: 6px;
 }
 
 .character-stage::before {
