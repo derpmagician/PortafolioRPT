@@ -4,6 +4,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">	<title>Portafolio de Renzo Perez</title>
+	<script type="importmap">
+	{
+		"imports": {
+			"three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+			"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
+		}
+	}
+	</script>
 	<!-- Properly importing main.js with module type -->
 	<script type="module" src="./scripts/main.js"></script>
 	<link rel="stylesheet" href="styles.css">
@@ -20,6 +28,9 @@
 		</h1>
 	</div>
 	<main id="screen" class="screen">
+		<div id="character-stage" class="character-stage" aria-hidden="true">
+			<p class="character-status">Loading character...</p>
+		</div>
 		<div id="cube" class="cube">
 			<div class="side front home">
 				<p class="home-title">FullStack Dev and Code Wizard</p>
@@ -119,21 +130,21 @@
 	</main>
 	<fieldset class="controls">
 		<button id="experienceBtn" class="button experienceBtn">
-			<span class="key-symbol">(←)</span> Experience
+			<span class="key-symbol">(4←)</span> Experience
 		</button>
 		<button id="homeBtn" class="button homeBtn">
 			<span class="key-symbol">(HOME)</span> Home
 		</button>
 		<button id="aboutBtn" class="button aboutBtn">
-			<span class="key-symbol">(→)</span> About Me </button>
+			<span class="key-symbol">(6→)</span> About Me </button>
 		<button id="contactBtn" class="button contactBtn">
 			<span class="key-symbol">(END)</span> Contact
 		</button>
 		<button id="topBtn" class="button topBtn">
-			<span class="key-symbol">(↑)</span> Projects
+			<span class="key-symbol">(8↑)</span> Projects
 		</button>
 		<button id="bottomBtn" class="button bottomBtn">
-			<span class="key-symbol">(↓)</span> Controls
+			<span class="key-symbol">(2↓)</span> Controls
 		</button>
 	</fieldset>
 </div>

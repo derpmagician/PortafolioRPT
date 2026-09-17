@@ -93,6 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Inicialización de los controles de partículas
   initializeParticleControls();
+  
+  // Inicialización del personaje 3D junto al cubo
+  setupCharacterStage();
 });
 
 
@@ -228,54 +231,74 @@ const setupFormAnimations = () => {
   // Submit button click effect
   const submitBtn = document.getElementById('submitBtn');
   if (submitBtn) {
-    submitBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      
+    submitBtn.addEventListener('click', () => {
       animate(submitBtn, {
         scale: [1, 0.95, 1.05, 1],
         duration: 400,
         easing: 'easeOutCubic'
       });
-      
-      // Show "Message sent" confirmation (simulated)
-      setTimeout(() => {
-        const formInputs = document.querySelectorAll('.form-input, .form-textarea');
-        formInputs.forEach(input => input.value = '');
-        
-        // Create temporary confirmation message
-        const form = document.querySelector('.contact-form');
-        const confirmation = document.createElement('div');
-        confirmation.textContent = '¡Mensaje enviado!';
-        confirmation.style.color = 'var(--color-lime)';
-        confirmation.style.textAlign = 'center';
-        confirmation.style.marginTop = '10px';
-        confirmation.style.fontWeight = 'bold';
-        
-        form.appendChild(confirmation);
-        
-        // Animate confirmation message
-        animate(confirmation, {
-          opacity: [0, 1],
-          translateY: ['-10px', '0px'],
-          duration: 400,
-          easing: 'easeOutCubic'
-        });
-        
-        // Remove confirmation message after 3 seconds
-        setTimeout(() => {
-          animate(confirmation, {
-            opacity: [1, 0],
-            translateY: ['0px', '10px'],
-            duration: 400,
-            easing: 'easeOutCubic',
-            complete: () => {
-              confirmation.remove();
-            }
-          });
-        }, 3000);
-      }, 500);
     });
   }
+  
+  // Envío real del mensaje por AJAX de FormSubmit, para no salir de la página
+  const contactForm = document.querySelector('.contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const data = Object.fromEntries(new FormData(contactForm).entries());
+      if (submitBtn) submitBtn.disabled = true;
+      
+      fetch('https://formsubmit.co/ajax/renzin@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(response => response.json())
+        .then(result => {
+          const sent = String(result.success) === 'true';
+          showFormNotice(contactForm, sent ? '¡Mensaje enviado!' : 'No se pudo enviar. Inténtalo de nuevo.', !sent);
+          if (sent) contactForm.reset();
+        })
+        .catch(() => {
+          showFormNotice(contactForm, 'No se pudo enviar. Revisa tu conexión e inténtalo de nuevo.', true);
+        })
+        .finally(() => {
+          if (submitBtn) submitBtn.disabled = false;
+        });
+    });
+  }
+};
+
+// Aviso temporal bajo el formulario de contacto
+const showFormNotice = (form, message, isError) => {
+  const notice = document.createElement('div');
+  notice.className = isError ? 'form-notice form-notice--error' : 'form-notice';
+  notice.setAttribute('role', 'status');
+  notice.textContent = message;
+  form.appendChild(notice);
+  
+  animate(notice, {
+    opacity: [0, 1],
+    translateY: ['-10px', '0px'],
+    duration: 400,
+    easing: 'easeOutCubic'
+  });
+  
+  setTimeout(() => {
+    animate(notice, {
+      opacity: [1, 0],
+      translateY: ['0px', '10px'],
+      duration: 400,
+      easing: 'easeOutCubic',
+      complete: () => {
+        notice.remove();
+      }
+    });
+  }, 3000);
 };
 
 // Set custom properties for sides
@@ -498,37 +521,46 @@ $bottomBtn.addEventListener('click', () => {
 
 // Add keyboard navigation
 document.addEventListener('keydown', (e) => {
-  switch (e.key) {
-    case 'ArrowLeft':
-      experienceBtn();
-      updateVisibleSide();
-      break;
-    case 'ArrowRight':
-      aboutBtn();
-      updateVisibleSide();
-      break;
-    case 'ArrowUp':
-      topBtn();
-      updateVisibleSide();
-      break;
-    case 'ArrowDown':
-      bottomBtn();
-      updateVisibleSide();
-      break;
-    case 'Home':
-      homeBtn();
-      updateVisibleSide();
-      break;
-    case 'End':
-      contactBtn();
-      updateVisibleSide();
-      break;
-  }
+  // se usa e.code porque con NumLock apagado el numpad reporta ArrowLeft, Home, End...
+  const actions = {
+    Numpad4: experienceBtn,
+    Numpad6: aboutBtn,
+    Numpad8: topBtn,
+    Numpad2: bottomBtn,
+    ArrowLeft: experienceBtn,
+    ArrowRight: aboutBtn,
+    ArrowUp: topBtn,
+    ArrowDown: bottomBtn,
+    Home: homeBtn,
+    End: contactBtn
+  };
+
+  const action = actions[e.code] ?? actions[e.key];
+  if (!action) return;
+
+  action();
+  updateVisibleSide();
 });
 
 
 // Initialize to show home content
 setTimeout(updateVisibleSide, 100);
+
+// El personaje solo se descarga cuando el stage tiene espacio real en pantalla
+const setupCharacterStage = () => {
+  const stage = document.querySelector('.character-stage');
+  if (!stage) return;
+
+  const observer = new ResizeObserver(([entry]) => {
+    if (!entry.contentRect.width) return;
+    observer.disconnect();
+    import('./characterStage.js')
+      .then(({ mountCharacterStage }) => mountCharacterStage(stage))
+      .catch(() => stage.remove());
+  });
+
+  observer.observe(stage);
+};
 
 // Inicialización de los controles de partículas
 function initializeParticleControls() {

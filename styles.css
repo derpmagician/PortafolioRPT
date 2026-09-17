@@ -167,6 +167,7 @@ body {
 }
 
 .screen {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -187,6 +188,63 @@ body {
 
 .screen:hover {
   background: var(--bg-color-tr);
+}
+
+.character-stage {
+  position: absolute;
+  left: clamp(16px, 3.5vw, 48px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(24vw, 320px, calc((100% - var(--cube-size) * 1.1) / 2 - 24px));
+  aspect-ratio: 4 / 5;
+  pointer-events: none;
+}
+
+.character-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 60%, rgba(214, 228, 20, 0.16) 0%, rgba(214, 228, 20, 0) 65%);
+  filter: blur(18px);
+}
+
+.character-stage::after {
+  content: '';
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  width: 46%;
+  height: 12px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(214, 228, 20, 0.75) 0%, rgba(214, 228, 20, 0) 72%);
+  filter: blur(4px);
+}
+
+.character-stage canvas {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.character-status {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  margin: 0;
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-lime);
+  animation: character-pulse 2s ease-in-out infinite;
+}
+
+@keyframes character-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.85; }
 }
 
 .cube {
@@ -233,7 +291,7 @@ body {
 
 .controls {
   width: 100%;
-  max-width: 600px;
+  max-width: 620px;
   margin: 10px auto;
   padding: 10px;
   text-align: center;
@@ -272,8 +330,8 @@ body {
   font-size: 0.9em;
   color: #ffffff;
   display: inline-block;
-  margin-right: 4px;
-  margin-left: 4px;
+  margin-right: 2px;
+  margin-left: 2px;
   letter-spacing: 0.5px;
 }
 
@@ -565,6 +623,10 @@ body {
     --gap: 60px;
   }
   
+  .character-stage {
+    display: none;
+  }
+  
   .screen {
     height: 550px;
   }
@@ -692,8 +754,25 @@ body {
   width: 100%;
   padding: 4px;
   border-radius: 4px;
-  color: var(--color-white);
+  background: var(--color-white);
+  color: var(--color-turquoise);
   font-family: var(--font-family);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: rgba(0, 59, 70, 0.72);
+}
+
+.form-notice {
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+  color: var(--color-lime);
+}
+
+.form-notice--error {
+  color: var(--color-white);
 }
 
 .form-textarea {
