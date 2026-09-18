@@ -1,7 +1,7 @@
 export const myWorks = [
   {
     id: 0,
-    img: "./imgs/vue_chat_proyect.gif",
+    img: "./imgs/vue_chat_proyect.webp",
     title: "Vue Chat Project",
     description: "This SPA is made with Vue, Pinia and Bootstrap 5, and uses Firebase for Authentication, Data Storage and Chat functionality.",
     github: "https://github.com/derpmagician/fbvue3-exp",
@@ -9,7 +9,7 @@ export const myWorks = [
   },
   {
     id: 1,
-    img: "./imgs/user_administrator.gif",
+    img: "./imgs/user_administrator.webp",
     title: "User Administrator",
     description: "This SPA fetches an API and uses React, Routes and Redux to manipulate data and change users' roles and location. It also has Auth0 authentication.",
     github: "https://github.com/derpmagician/user-administration-react-redux",
@@ -25,7 +25,7 @@ export const myWorks = [
   },
   {
     id: 3,
-    img: "./imgs/image_filters.gif",
+    img: "./imgs/image_filters.webp",
     title: "Image Filters",
     description: "Image editor in React with a save feature that manipulates the CSS.",
     github: "https://github.com/derpmagician/react_img_filters",
@@ -33,7 +33,7 @@ export const myWorks = [
   },
   {
     id: 4,
-    img: "./imgs/tower_defense_js.gif",
+    img: "./imgs/tower_defense_js.webp",
     title: "Tower Defense Js",
     description: "Vanilla JavaScript game that uses the HTML Canvas element and JS classes to create the game objects.",
     github: "https://github.com/derpmagician/towerdefencejs",
@@ -49,7 +49,7 @@ export const myWorks = [
   // },
   {
     id: 6,
-    img: "./imgs/screen_saver_emulator.gif",
+    img: "./imgs/screen_saver_emulator.webp",
     title: "Screen Saver Emulator",
     description: "Manipulates CSS properties to draw the '3D' objects and uses vanilla JS to activate the timer that makes the screen appear.",
     github: "https://github.com/derpmagician/ScreenSaver-Sim",

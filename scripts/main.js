@@ -119,6 +119,8 @@ const renderProjects = () => {
     image.src = project.img;
     image.alt = project.title;
     image.className = 'project-image';
+    image.loading = 'lazy';
+    image.decoding = 'async';
     
     const content = document.createElement('div');
     content.className = 'project-content';
