@@ -49,10 +49,10 @@ export const myWorks = [
   // },
   {
     id: 6,
-    img: "./imgs/screen_saver_emulator.webp",
-    title: "Screen Saver Emulator",
-    description: "Manipulates CSS properties to draw the '3D' objects and uses vanilla JS to activate the timer that makes the screen appear.",
-    github: "https://github.com/derpmagician/ScreenSaver-Sim",
-    demo: "https://derpmagician.github.io/ScreenSaver-Sim/",
+    img: "./imgs/minikanban.png",
+    title: "MiniKanban",
+    description: "Kanban board monorepo with a React 19 + TypeScript client and a Fastify + Prisma REST API. It features authentication with refresh tokens, per-board roles, drag & drop cards, priorities and deadlines.",
+    github: "https://github.com/derpmagician/minikanban",
+    demo: null,
   },
 ]
