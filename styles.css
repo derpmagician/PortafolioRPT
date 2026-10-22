@@ -609,15 +609,19 @@ body {
 }
 
 @media (max-width: 480px) {
+  .side.left {
+    padding: 6px;
+  }
+
   .about-content {
     font-size: 0.7rem;
-    padding: 6px 8px;
-    line-height: 1.35;
+    padding: 4px;
+    line-height: 1.6;
     justify-content: flex-start;
   }
   
   .about-content p {
-    margin-bottom: 6px;
+    margin-bottom: 12px;
   }
   
   .side.left .profile-description {
