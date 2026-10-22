@@ -11,6 +11,7 @@ const [ $topBtn ] = utils.$('.topBtn');
 const [ $bottomBtn ] = utils.$('.bottomBtn');
 const [ $button ] = utils.$('.button');
 let rotations = 0;
+let activeScrollEl = null;
 
 animate('.cube', {
   scale: [
@@ -326,6 +327,7 @@ utils.set('.side', {
 
 // Enhanced button animations with smoother transitions
 const homeBtn = () => {
+  activeScrollEl = null;
   // Disable the button
   $homeBtn.disabled = true;
   
@@ -344,6 +346,7 @@ const homeBtn = () => {
 };
 
 const experienceBtn = () => {
+  activeScrollEl = null;
   // Disable the button
   $experienceBtn.disabled = true;
   
@@ -362,6 +365,7 @@ const experienceBtn = () => {
 };
 
 const aboutBtn = () => {
+  activeScrollEl = document.querySelector('.about-content');
   // Disable the button
   $aboutBtn.disabled = true;
 
@@ -380,6 +384,7 @@ const aboutBtn = () => {
 };
 
 const contactBtn = () => {
+  activeScrollEl = null;
   // Disable the button
   $contactBtn.disabled = true;
 
@@ -398,6 +403,7 @@ const contactBtn = () => {
 };
 
 const topBtn = () => {
+  activeScrollEl = document.querySelector('.projects-grid');
   // Disable the button
   $topBtn.disabled = true;
 
@@ -416,6 +422,7 @@ const topBtn = () => {
 };
 
 const bottomBtn = () => {
+  activeScrollEl = document.querySelector('.controls-side .bottom-content');
   // Disable the button
   $bottomBtn.disabled = true;
 
@@ -489,6 +496,47 @@ const updateVisibleSide = () => {
 
 // Monitor transitions
 document.querySelector('.cube').addEventListener('transitionend', updateVisibleSide);
+
+// Mobile touch scrolling for the active cube face.
+// The draggable cube sets touch-action: none and 3D hit-testing is unreliable,
+// so vertical swipes are handled manually on the screen container.
+const screenEl = document.querySelector('.screen');
+let touchScrollEl = null;
+let touchStartX = 0;
+let touchStartY = 0;
+let touchLastY = 0;
+let isTouchScrolling = false;
+
+screenEl.addEventListener('touchstart', (e) => {
+  touchScrollEl = null;
+  isTouchScrolling = false;
+  if (e.touches.length !== 1) return;
+  touchScrollEl = activeScrollEl;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = touchLastY = e.touches[0].clientY;
+}, { passive: true });
+
+screenEl.addEventListener('touchmove', (e) => {
+  if (!touchScrollEl || e.touches.length !== 1) return;
+  const x = e.touches[0].clientX;
+  const y = e.touches[0].clientY;
+  const dx = x - touchStartX;
+  const dy = y - touchStartY;
+
+  if (!isTouchScrolling) {
+    if (Math.abs(dy) < 8 || Math.abs(dy) <= Math.abs(dx)) return;
+    isTouchScrolling = true;
+  }
+
+  e.preventDefault();
+  touchScrollEl.scrollTop += touchLastY - y;
+  touchLastY = y;
+}, { passive: false });
+
+screenEl.addEventListener('touchend', () => {
+  touchScrollEl = null;
+  isTouchScrolling = false;
+}, { passive: true });
 
 // Event listeners
 $homeBtn.addEventListener('click', () => {
