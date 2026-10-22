@@ -1,4 +1,4 @@
-import { animate, utils, stagger, createDraggable, createSpring, onScroll, waapi, createScope } from './anime/anime.esm.js';
+import { animate, utils, stagger, createDraggable, createSpring, createScope } from './anime/anime.esm.js';
 import { myWorks } from './myWork.js';
 import { setupParticles } from './particleSystem.js';
 import { setupImageTilt } from './imageTiltEffect.js';
@@ -9,8 +9,6 @@ const [ $aboutBtn ] = utils.$('.aboutBtn');
 const [ $contactBtn ] = utils.$('.contactBtn');
 const [ $topBtn ] = utils.$('.topBtn');
 const [ $bottomBtn ] = utils.$('.bottomBtn');
-const [ $button ] = utils.$('.button');
-let rotations = 0;
 let activeScrollEl = null;
 let activeScrollTransform = false;
 let contactScrollOffset = 0;
@@ -29,8 +27,6 @@ const cube = document.querySelector('.cube');
 const screenEl = document.querySelector('.screen');
 let floatingAnimation = null;
 let isScreenHovered = false;
-let initialRotationX = 0;
-let initialRotationY = 0;
 
 screenEl.addEventListener('pointerenter', (event) => {
   if (event.pointerType !== 'mouse') return;
@@ -47,12 +43,7 @@ screenEl.addEventListener('pointerleave', (event) => {
 createDraggable('.cube', {
   container: [0, 0, 0, 0],
   releaseEase: createSpring({ stiffness: 200 }),
-  onGrab: (e) => {
-    // Store initial rotation when starting to drag
-    const transform = getComputedStyle(cube).transform;
-    // Extract rotation values if needed
-    initialRotationX = 0; 
-    initialRotationY = 0;
+  onGrab: () => {
     cubePulse.pause();
     floatingAnimation?.pause();
   },
@@ -61,14 +52,9 @@ createDraggable('.cube', {
     if (!isScreenHovered) cubePulse.play();
   },
   onDrag: (e) => {
-    // Calculate rotation based on drag movement
     if (e.deltaX !== undefined && e.deltaY !== undefined) {
-      const rotationY = initialRotationY + (e.deltaX * 0.5);
-      const rotationX = initialRotationX + (e.deltaY * 0.5);
-      
-      // Apply rotation directly
       utils.set(cube, {
-        transform: `rotateY(${rotationY}deg) rotateX(${rotationX}deg)`
+        transform: `rotateY(${e.deltaX * 0.5}deg) rotateX(${e.deltaY * 0.5}deg)`
       });
     }
   }
@@ -106,11 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Add subtle floating animation to the cube
   addCubeFloatingEffect();
-  
-  // Setup animated skill bars
-  setTimeout(() => {
-    setupSkillBars();
-  }, 500);
   
   // Setup form input animations
   setupFormAnimations();
@@ -205,24 +186,6 @@ const addCubeFloatingEffect = () => {
     easing: 'easeInOutSine',
     loop: true,
     id: 'floating'
-  });
-};
-
-// Setup animated skill bars
-const setupSkillBars = () => {
-  const skillItems = document.querySelectorAll('.skill-item');
-  
-  skillItems.forEach((item, index) => {
-    const level = item.querySelector('.skill-level').textContent;
-    const percentage = parseInt(level);
-    const bar = item.querySelector('::before');
-    
-    animate(item, {
-      '--width': ['0%', `${percentage}%`],
-      duration: 1000,
-      delay: index * 100,
-      easing: 'easeOutQuart'
-    });
   });
 };
 
@@ -473,63 +436,6 @@ const bottomBtn = () => {
   }, 850);
 };
 
-// Content animation functions
-const animateVisibleContent = (sideClass) => {
-  const selectors = {
-    '.front': ['.home-title', '.home-image'],
-    '.right': ['.profile-description', '.tech-logos-frontend img', '.tech-logos-backend img'],
-    '.left': ['.profile-description', '.about-content p'],
-    '.back': ['.contact-title', '.form-group', '.social-links'],
-    '.top': ['.projects-title', '.project-card'],
-    '.bottom': ['.skills-title', '.skill-item']
-  };
-    
-    // Special animations for specific sides
-    if (sideClass === '.bottom') {
-      setupSkillBars();
-    }
-
-}
-
-// Detect which side is currently visible and animate its content
-const updateVisibleSide = () => {
-  const cube = document.querySelector('.cube');
-  const computedStyle = window.getComputedStyle(cube);
-  const transform = computedStyle.transform;
-  
-  // Extract rotation angle from transform matrix
-  let angle = 0;
-  if (transform !== 'none') {
-    const values = transform.split('(')[1].split(')')[0].split(',');
-    angle = Math.round(Math.atan2(values[1], values[0]) * (180/Math.PI));
-  }
-  
-  // Determine which side is visible based on angle
-  if (angle === 0 || angle === 360 || angle === -360) {
-    animateVisibleContent('.front');
-  } else if (angle === 90 || angle === -270) {
-    animateVisibleContent('.right');
-  } else if (angle === -90 || angle === 270) {
-    animateVisibleContent('.left');
-  } else if (angle === 180 || angle === -180) {
-    animateVisibleContent('.back');
-  }
-  
-  // Check for vertical rotations for top and bottom
-  const matrix = new DOMMatrix(transform);
-  const rotateX = Math.round(Math.atan2(matrix.m32, matrix.m33) * (180/Math.PI));
-  
-  if (rotateX === 90 || rotateX === -270) {
-    animateVisibleContent('.top');
-  } else if (rotateX === -90 || rotateX === 270) {
-    animateVisibleContent('.bottom');
-  }
-};
-
-
-// Monitor transitions
-document.querySelector('.cube').addEventListener('transitionend', updateVisibleSide);
-
 // Mobile touch scrolling for the active cube face.
 // The draggable cube sets touch-action: none and 3D hit-testing is unreliable,
 // so vertical swipes are handled manually on the screen container.
@@ -624,32 +530,26 @@ screenEl.addEventListener('touchend', () => {
 // Event listeners
 $homeBtn.addEventListener('click', () => {
   homeBtn();
-  updateVisibleSide();
 });
 
 $experienceBtn.addEventListener('click', () => {
   experienceBtn();
-  updateVisibleSide();
 });
 
 $aboutBtn.addEventListener('click', () => {
   aboutBtn();
-  updateVisibleSide();
 });
 
 $contactBtn.addEventListener('click', () => {
   contactBtn();
-  updateVisibleSide();
 });
 
 $topBtn.addEventListener('click', () => {
   topBtn();
-  updateVisibleSide();
 });
 
 $bottomBtn.addEventListener('click', () => {
   bottomBtn();
-  updateVisibleSide();
 });
 
 // Add keyboard navigation
@@ -672,12 +572,8 @@ document.addEventListener('keydown', (e) => {
   if (!action) return;
 
   action();
-  updateVisibleSide();
 });
 
-
-// Initialize to show home content
-setTimeout(updateVisibleSide, 100);
 
 // El personaje solo se descarga cuando el stage tiene espacio real en pantalla
 const setupCharacterStage = () => {
