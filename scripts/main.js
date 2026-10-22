@@ -1,6 +1,6 @@
 import { animate, utils, stagger, createDraggable, createSpring, createScope } from './anime/anime.esm.js';
 import { myWorks } from './myWork.js';
-import { setupParticles } from './particleSystem.js';
+import { setupParticles, configureParticleSystem } from './particleSystem.js';
 import { setupImageTilt } from './imageTiltEffect.js';
 
 const [ $homeBtn ] = utils.$('.homeBtn');
@@ -603,58 +603,56 @@ function initializeParticleControls() {
   const particleSpeedValue = document.getElementById('particleSpeedValue');
   const particleSizeValue = document.getElementById('particleSizeValue');
   const connectionDistanceValue = document.getElementById('connectionDistanceValue');
-    // Eventos para actualizar los valores y el sistema de partículas
+
+  const config = configureParticleSystem;
+
+  const syncControls = () => {
+    particleCountSlider.max = config.maxParticles;
+    particleCountSlider.value = config.particleCount;
+    particleCountValue.textContent = config.particleCount;
+
+    particleSpeedSlider.value = config.particleSpeed;
+    particleSpeedValue.textContent = config.particleSpeed;
+
+    particleSizeSlider.value = config.particleSize;
+    particleSizeValue.textContent = config.particleSize;
+
+    connectionDistanceSlider.max = config.maxConnectionDistance;
+    connectionDistanceSlider.value = config.connectionDistance;
+    connectionDistanceValue.textContent = config.connectionDistance;
+  };
+
+  syncControls();
+
+  // Eventos para actualizar los valores y el sistema de partículas
   particleCountSlider.addEventListener('input', (e) => {
-    const value = e.target.value;
-    particleCountValue.textContent = value;
-    import('./particleSystem.js').then(module => {
-      module.configureParticleSystem.changeParticleCount(value);
-    });
+    config.changeParticleCount(e.target.value);
+    e.target.value = config.particleCount;
+    particleCountValue.textContent = config.particleCount;
   });
   
   particleSpeedSlider.addEventListener('input', (e) => {
-    const value = e.target.value;
-    particleSpeedValue.textContent = value;
-    import('./particleSystem.js').then(module => {
-      module.configureParticleSystem.changeParticleSpeed(value);
-    });
+    config.changeParticleSpeed(e.target.value);
+    particleSpeedValue.textContent = config.particleSpeed;
   });
   
   particleSizeSlider.addEventListener('input', (e) => {
-    const value = e.target.value;
-    particleSizeValue.textContent = value;
-    import('./particleSystem.js').then(module => {
-      module.configureParticleSystem.changeParticleSize(value);
-    });
+    config.changeParticleSize(e.target.value);
+    particleSizeValue.textContent = config.particleSize;
   });
   
   connectionDistanceSlider.addEventListener('input', (e) => {
-    const value = e.target.value;
-    connectionDistanceValue.textContent = value;
-    import('./particleSystem.js').then(module => {
-      module.configureParticleSystem.changeConnectionDistance(value);
-    });
+    config.changeConnectionDistance(e.target.value);
+    e.target.value = config.connectionDistance;
+    connectionDistanceValue.textContent = config.connectionDistance;
   });
   
   // Añadir evento para el botón de reset
   const resetButton = document.getElementById('resetParticlesBtn');
   if (resetButton) {
     resetButton.addEventListener('click', () => {
-      // Restablecer los valores predeterminados en los controles
-      particleCountSlider.value = 150;
-      particleSpeedSlider.value = 0.7;
-      particleSizeSlider.value = 5;
-      connectionDistanceSlider.value = 120;
-      
-      // Actualizar los valores mostrados
-      particleCountValue.textContent = 150;
-      particleSpeedValue.textContent = 0.7;
-      particleSizeValue.textContent = 5;
-      connectionDistanceValue.textContent = 120;
-        // Resetear los valores en el sistema de partículas usando la función de reset
-      import('./particleSystem.js').then(module => {
-        module.configureParticleSystem.resetToDefaults();
-      });
+      config.resetToDefaults();
+      syncControls();
     });
   }
 }
