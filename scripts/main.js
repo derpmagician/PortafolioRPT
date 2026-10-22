@@ -12,6 +12,8 @@ const [ $bottomBtn ] = utils.$('.bottomBtn');
 const [ $button ] = utils.$('.button');
 let rotations = 0;
 let activeScrollEl = null;
+let activeScrollTransform = false;
+let contactScrollOffset = 0;
 
 animate('.cube', {
   scale: [
@@ -328,6 +330,7 @@ utils.set('.side', {
 // Enhanced button animations with smoother transitions
 const homeBtn = () => {
   activeScrollEl = null;
+  activeScrollTransform = false;
   // Disable the button
   $homeBtn.disabled = true;
   
@@ -347,6 +350,7 @@ const homeBtn = () => {
 
 const experienceBtn = () => {
   activeScrollEl = null;
+  activeScrollTransform = false;
   // Disable the button
   $experienceBtn.disabled = true;
   
@@ -366,6 +370,7 @@ const experienceBtn = () => {
 
 const aboutBtn = () => {
   activeScrollEl = document.querySelector('.about-content');
+  activeScrollTransform = false;
   // Disable the button
   $aboutBtn.disabled = true;
 
@@ -384,7 +389,11 @@ const aboutBtn = () => {
 };
 
 const contactBtn = () => {
-  activeScrollEl = null;
+  const contactContent = document.querySelector('.contact-content');
+  contactScrollOffset = 0;
+  contactContent.style.transform = 'translateY(0)';
+  activeScrollEl = contactContent;
+  activeScrollTransform = true;
   // Disable the button
   $contactBtn.disabled = true;
 
@@ -404,6 +413,7 @@ const contactBtn = () => {
 
 const topBtn = () => {
   activeScrollEl = document.querySelector('.projects-grid');
+  activeScrollTransform = false;
   // Disable the button
   $topBtn.disabled = true;
 
@@ -423,6 +433,7 @@ const topBtn = () => {
 
 const bottomBtn = () => {
   activeScrollEl = document.querySelector('.controls-side .bottom-content');
+  activeScrollTransform = false;
   // Disable the button
   $bottomBtn.disabled = true;
 
@@ -507,6 +518,13 @@ let touchStartY = 0;
 let touchLastY = 0;
 let isTouchScrolling = false;
 
+const getContactMaxOffset = (el) => {
+  const parent = el.parentElement;
+  const style = getComputedStyle(parent);
+  const available = parent.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+  return Math.max(0, el.offsetHeight - available);
+};
+
 screenEl.addEventListener('touchstart', (e) => {
   touchScrollEl = null;
   isTouchScrolling = false;
@@ -517,9 +535,19 @@ screenEl.addEventListener('touchstart', (e) => {
 }, { passive: true });
 
 screenEl.addEventListener('touchmove', (e) => {
-  if (!touchScrollEl || e.touches.length !== 1) return;
+  if (e.touches.length !== 1) return;
   const x = e.touches[0].clientX;
   const y = e.touches[0].clientY;
+
+  if (!touchScrollEl) {
+    if (!activeScrollEl) return;
+    touchScrollEl = activeScrollEl;
+    touchStartX = x;
+    touchStartY = touchLastY = y;
+    isTouchScrolling = false;
+    return;
+  }
+
   const dx = x - touchStartX;
   const dy = y - touchStartY;
 
@@ -529,7 +557,16 @@ screenEl.addEventListener('touchmove', (e) => {
   }
 
   e.preventDefault();
-  touchScrollEl.scrollTop += touchLastY - y;
+  const delta = touchLastY - y;
+
+  if (activeScrollTransform) {
+    const max = getContactMaxOffset(touchScrollEl);
+    contactScrollOffset = Math.max(0, Math.min(max, contactScrollOffset + delta));
+    touchScrollEl.style.transform = `translateY(-${contactScrollOffset}px)`;
+  } else {
+    touchScrollEl.scrollTop += delta;
+  }
+
   touchLastY = y;
 }, { passive: false });
 
