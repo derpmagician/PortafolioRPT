@@ -610,9 +610,10 @@ body {
 
 @media (max-width: 480px) {
   .about-content {
-    font-size: 0.3rem;
-    padding: 5px 8px;
-    line-height: 0.5;
+    font-size: 0.7rem;
+    padding: 6px 8px;
+    line-height: 1.35;
+    justify-content: flex-start;
   }
   
   .about-content p {
