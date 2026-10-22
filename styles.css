@@ -752,6 +752,10 @@ body {
   align-items: center;
 }
 
+.contact-scrollbar {
+  display: none;
+}
+
 .contact-title {
   font-family: var(--heading-font);
   color: var(--color-lime);
@@ -881,6 +885,33 @@ body {
   .contact-content {
     padding-right: 4px;
   }
+
+  .contact-scrollbar {
+    display: block;
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    right: 2px;
+    width: 5px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .contact-scrollbar.visible {
+    opacity: 1;
+  }
+
+  .contact-scrollbar-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 10px;
+    background-color: var(--color-lime);
+  }
   
   .contact-form {
     max-width: 250px;
@@ -904,6 +935,11 @@ body {
 @media (max-width: 480px) {
   .side.back {
     padding: 6px;
+  }
+
+  .contact-scrollbar {
+    top: 6px;
+    bottom: 6px;
   }
   
   .contact-form {

@@ -394,6 +394,7 @@ const contactBtn = () => {
   contactContent.style.transform = 'translateY(0)';
   activeScrollEl = contactContent;
   activeScrollTransform = true;
+  requestAnimationFrame(updateContactScrollbar);
   // Disable the button
   $contactBtn.disabled = true;
 
@@ -525,6 +526,30 @@ const getContactMaxOffset = (el) => {
   return Math.max(0, el.offsetHeight - available);
 };
 
+const contactScrollbar = document.querySelector('.contact-scrollbar');
+const contactScrollbarThumb = document.querySelector('.contact-scrollbar-thumb');
+
+function updateContactScrollbar() {
+  if (!contactScrollbar || !contactScrollbarThumb || !activeScrollTransform) return;
+  const el = document.querySelector('.contact-content');
+  const max = getContactMaxOffset(el);
+
+  if (max <= 0) {
+    contactScrollbar.classList.remove('visible');
+    return;
+  }
+
+  contactScrollbar.classList.add('visible');
+  const style = getComputedStyle(el.parentElement);
+  const available = el.parentElement.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+  const track = contactScrollbar.clientHeight;
+  const thumbHeight = Math.max(20, track * Math.min(1, available / el.offsetHeight));
+  const top = (track - thumbHeight) * (contactScrollOffset / max);
+
+  contactScrollbarThumb.style.height = `${thumbHeight}px`;
+  contactScrollbarThumb.style.transform = `translateY(${top}px)`;
+}
+
 screenEl.addEventListener('touchstart', (e) => {
   touchScrollEl = null;
   isTouchScrolling = false;
@@ -563,6 +588,7 @@ screenEl.addEventListener('touchmove', (e) => {
     const max = getContactMaxOffset(touchScrollEl);
     contactScrollOffset = Math.max(0, Math.min(max, contactScrollOffset + delta));
     touchScrollEl.style.transform = `translateY(-${contactScrollOffset}px)`;
+    updateContactScrollbar();
   } else {
     touchScrollEl.scrollTop += delta;
   }
