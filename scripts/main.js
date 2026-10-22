@@ -349,8 +349,8 @@ const experienceBtn = () => {
   
   // Animate the cube with enhanced easing
   animate('.cube', { 
-    rotateY: '+90',
-    rotateX: '0',
+    rotateX: '90',
+    rotateY: '0',
     scale: '1',
     duration: 850,
     easing: 'easeOutExpo'
@@ -421,8 +421,8 @@ const bottomBtn = () => {
 
   // Animate the cube with enhanced easing
   animate('.cube', { 
-    rotateX: '90',
-    rotateY: '0',
+    rotateY: '+90',
+    rotateX: '0',
     scale: '1',
     duration: 850,
     easing: 'easeOutExpo'

@@ -916,7 +916,8 @@ body {
 }
 
 .side.top,
-.side.bottom {
+.side.bottom,
+.side.right {
   background: var(--bg-color-light);
   display: flex;
   flex-direction: column;
@@ -932,7 +933,7 @@ body {
 }
 
 @media (max-width: 900px) {
-  .side.bottom {
+  .side.controls-side {
     justify-content: flex-start;
     overflow-y: auto;
     padding: 10px;
@@ -941,16 +942,16 @@ body {
     scrollbar-color: var(--color-lime) rgba(0, 0, 0, 0.2);
   }
 
-  .side.bottom::-webkit-scrollbar {
+  .side.controls-side::-webkit-scrollbar {
     width: 5px;
   }
 
-  .side.bottom::-webkit-scrollbar-track {
+  .side.controls-side::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
   }
 
-  .side.bottom::-webkit-scrollbar-thumb {
+  .side.controls-side::-webkit-scrollbar-thumb {
     background-color: var(--color-lime);
     border-radius: 10px;
   }
