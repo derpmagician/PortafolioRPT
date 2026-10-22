@@ -15,7 +15,7 @@ let activeScrollEl = null;
 let activeScrollTransform = false;
 let contactScrollOffset = 0;
 
-animate('.cube', {
+const cubePulse = animate('.cube', {
   scale: [
     { to: 1.25, ease: 'inOut(3)', duration: 200 },
     { to: 1, ease: createSpring({ stiffness: 300 }) }
@@ -26,8 +26,23 @@ animate('.cube', {
 
 // Make the logo draggable around its center
 const cube = document.querySelector('.cube');
+const screenEl = document.querySelector('.screen');
+let floatingAnimation = null;
+let isScreenHovered = false;
 let initialRotationX = 0;
 let initialRotationY = 0;
+
+screenEl.addEventListener('pointerenter', (event) => {
+  if (event.pointerType !== 'mouse') return;
+  isScreenHovered = true;
+  cubePulse.pause();
+});
+
+screenEl.addEventListener('pointerleave', (event) => {
+  if (event.pointerType !== 'mouse') return;
+  isScreenHovered = false;
+  cubePulse.play();
+});
 
 createDraggable('.cube', {
   container: [0, 0, 0, 0],
@@ -38,6 +53,12 @@ createDraggable('.cube', {
     // Extract rotation values if needed
     initialRotationX = 0; 
     initialRotationY = 0;
+    cubePulse.pause();
+    floatingAnimation?.pause();
+  },
+  onRelease: () => {
+    floatingAnimation?.play();
+    if (!isScreenHovered) cubePulse.play();
   },
   onDrag: (e) => {
     // Calculate rotation based on drag movement
@@ -178,7 +199,7 @@ const renderProjects = () => {
 
 // Add subtle floating animation to the cube
 const addCubeFloatingEffect = () => {
-  animate('.cube', {
+  floatingAnimation = animate('.cube', {
     translateY: [0, -10, 0],
     duration: 3000,
     easing: 'easeInOutSine',
@@ -512,7 +533,6 @@ document.querySelector('.cube').addEventListener('transitionend', updateVisibleS
 // Mobile touch scrolling for the active cube face.
 // The draggable cube sets touch-action: none and 3D hit-testing is unreliable,
 // so vertical swipes are handled manually on the screen container.
-const screenEl = document.querySelector('.screen');
 let touchScrollEl = null;
 let touchStartX = 0;
 let touchStartY = 0;
