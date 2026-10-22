@@ -1320,21 +1320,47 @@ body {
 
 @media (max-width: 768px) {
   .particle-controls-container {
-    max-width: 90%;
+    max-width: 100%;
+    gap: 8px;
   }
   
   .control-item {
-    padding: 8px;
-    flex-wrap: wrap;
+    padding: 6px 8px;
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+  
+  .control-item label {
+    flex: 0 0 auto;
+    font-size: 0.72rem;
   }
   
   .control-slider {
-    flex: 1 0 100%;
-    margin: 8px 0;
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
   }
   
   .control-value {
-    min-width: 30px;
+    flex: 0 0 auto;
+    min-width: 24px;
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .control-item {
+    padding: 5px 6px;
+    gap: 4px;
+  }
+
+  .control-item label {
+    font-size: 0.64rem;
+  }
+
+  .control-value {
+    min-width: 20px;
+    font-size: 0.64rem;
   }
 }
 
